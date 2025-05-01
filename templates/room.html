@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room - Rotato</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <style>
+    .room-tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .room-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.2s ease;
+    }
+    
+    .room-tab.active {
+      border-bottom-color: var(--aero-blue);
+      color: var(--aero-blue);
+    }
+    
+    .room-tab:hover:not(.active) {
+      border-bottom-color: rgba(0, 120, 215, 0.3);
+      color: #333;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .settings-form {
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .settings-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .settings-group h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: 0.5rem;
+    }
+    
+    .premium-feature {
+      position: relative;
+    }
+    
+    .premium-badge {
+      display: inline-block;
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #d79b00;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    
+    .premium-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    
+    .share-box {
+      background-color: rgba(0, 120, 215, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(0, 120, 215, 0.1);
+    }
+    
+    .share-url {
+      font-family: monospace;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 0.5rem;
+      border-radius: 4px;
+      word-break: break-all;
+      margin: 0.5rem 0;
+    }
+    
+    .copy-btn {
+      background-color: transparent;
+      border: 1px solid rgba(0, 120, 215, 0.3);
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      background-color: rgba(0, 120, 215, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container glass-pane">
+    <header class="main-header">
+      <h1 class="fade-in-down">Rotato Room</h1>
+      <div class="header-actions">
+        {% if user %}
+        <a href="{{ url_for('dashboard') }}" class="cta-button">Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="cta-button">Sign Up</a>
+        {% endif %}
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="share-box">
+      <p><strong>Share this room:</strong></p>
+      <div class="share-url" id="room-url">{{ request.url }}</div>
+      <button class="copy-btn" onclick="copyToClipboard()">Copy URL</button>
+    </div>
+    
+    <div class="room-tabs">
+      <div class="room-tab active" onclick="switchTab('pairs')">Current Pairs</div>
+      <div class="room-tab" onclick="switchTab('history')">History</div>
+      {% if is_owner %}
+      <div class="room-tab" onclick="switchTab('settings')">Room Settings</div>
+      {% endif %}
+    </div>
+    
+    <div id="pairs-tab" class="tab-content active">
+      <form method="post" class="inline-form">
+        <input type="hidden" name="generate" value="1">
+        <button type="submit" class="cta-button cta-primary">
+          <span>🔄</span> Generate Next Round
+        </button>
+      </form>
+      
+      <div class="pairs-section fade-in-up" style="animation-delay: 0.3s;">
+        <h2>Current Pairs</h2>
+        <ul class="pairs-list">
+          {% for a,b in pairs %}
+          <li class="list-item-interactive">
+            <span class="name-chip">{{ a }}</span> <span class="pair-separator">&harr;</span> <span class="name-chip">{{ b }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    
+    <div id="history-tab" class="tab-content">
+      <h2>Previous Rounds</h2>
+      {% if history %}
+        {% for rnd in history|reverse %}
+          <div class="history-section">
+            <h3>Round {{ loop.revindex }}</h3>
+            <ul class="history-list">
+            {% for a,b in rnd %}
+              <li class="list-item-subtle">
+                <span class="name-chip-small">{{ a }}</span> / <span class="name-chip-small">{{ b }}</span>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% else %}
+      <p>No previous rounds yet.</p>
+      {% endif %}
+    </div>
+    
+    {% if is_owner %}
+    <div id="settings-tab" class="tab-content">
+      <h2>Room Settings</h2>
+      
+      <form method="post" class="settings-form">
+        <input type="hidden" name="save_settings" value="1">
+        
+        <div class="settings-group">
+          <h3>Participants <span class="badge">{{ names.splitlines()|length }}</span></h3>
+          <textarea name="participants" class="input-field" rows="5" readonly>{{ names }}</textarea>
+        </div>
+        
+        <div class="settings-group premium-feature">
+          <h3>Slack Integration <span class="premium-badge">PREMIUM</span></h3>
+          
+          {% if not premium_features %}
+          <div class="premium-overlay">
+            <p><strong>This is a premium feature</strong></p>
+            <a href="{{ url_for('subscription') }}" class="cta-button cta-primary">Upgrade to Premium</a>
+          </div>
+          {% endif %}
+          
+          <div class="form-field">
+            <label class="form-label">Slack Webhook URL:</label>
+            <input type="text" name="slack_webhook" class="input-field" value="{{ slack_webhook or '' }}" placeholder="https://hooks.slack.com/services/..." {% if not premium_features %}disabled{% endif %}>
+            <p class="field-help">Paste your Slack webhook URL to send pair notifications to a channel.</p>
+          </div>
+          
+          <div class="form-field">
+            <label class="form-label">Slack Channel:</label>
+            <input type="text" name="slack_channel" class="input-field" value="{{ slack_channel or '' }}" placeholder="#pairings" {% if not premium_features %}disabled{% endif %}>
+            <p class="field-help">Optional: Specify which channel to post to (if different from webhook default).</p>
+          </div>
+        </div>
+        
+        <div class="settings-group premium-feature">
+          <h3>Automatic Scheduling <span class="premium-badge">PREMIUM</span></h3>
+          
+          {% if not premium_features %}
+          <div class="premium-overlay">
+            <p><strong>This is a premium feature</strong></p>
+            <a href="{{ url_for('subscription') }}" class="cta-button cta-primary">Upgrade to Premium</a>
+          </div>
+          {% endif %}
+          
+          <div class="form-field">
+            <label class="form-label">Schedule:</label>
+            <input type="text" name="auto_schedule" class="input-field" value="{{ auto_schedule or '' }}" placeholder="mon:9:00" {% if not premium_features %}disabled{% endif %}>
+            <p class="field-help">Format: day:hour:minute (e.g., mon:9:00). Leave empty to disable.</p>
+          </div>
+        </div>
+        
+        <button type="submit" class="cta-button cta-primary">Save Settings</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Background elements -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+  
+  <script>
+    function switchTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Deactivate all tabs
+      document.querySelectorAll('.room-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Activate the selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      document.querySelector(`.room-tab:nth-child(${tabName === 'pairs' ? 1 : tabName === 'history' ? 2 : 3})`).classList.add('active');
+    }
+    
+    function copyToClipboard() {
+      const url = document.getElementById('room-url').innerText;
+      navigator.clipboard.writeText(url).then(() => {
+        const copyBtn = document.querySelector('.copy-btn');
+        const originalText = copyBtn.innerText;
+        copyBtn.innerText = 'Copied!';
+        setTimeout(() => {
+          copyBtn.innerText = originalText;
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Room - Rotato</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="main-container glass-pane">
+    <header class="main-header">
+      <h1 class="fade-in-down">Create a New Room</h1>
+      <a href="{{ url_for('dashboard') }}" class="cta-button">Back to Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="post" class="input-form fade-in-up" style="animation-delay: 0.2s;">
+      <div class="info-box">
+        <p>Enter one participant name per line. Names will be randomly paired for each round.</p>
+        {% if current_user.subscription_tier == 'free' %}
+        <p><strong>Note:</strong> Free accounts are limited to 10 participants per room.</p>
+        {% endif %}
+      </div>
+      
+      <label for="names-textarea" class="form-label subtle-fade-in" style="animation-delay: 0.3s;">Participant Names:</label>
+      <textarea id="names-textarea" name="names" rows="10" placeholder="One name per line..." required class="input-field focus-glow">{{ names|default('') }}</textarea><br>
+      
+      <button type="submit" class="cta-button cta-primary pulse-button">
+        <span>🌀</span> Create Room
+      </button>
+    </form>
+  </div>
+
+  <!-- Background elements -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+</body>
+</html>

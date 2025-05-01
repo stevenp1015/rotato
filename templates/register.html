@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Rotato</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="main-container glass-pane">
+    <header class="main-header">
+      <h1 class="fade-in-down">Create Your Rotato Account</h1>
+      <a href="{{ url_for('about') }}" class="upgrade-button">Learn More</a>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="post" class="input-form fade-in-up" style="animation-delay: 0.2s;">
+      {{ form.hidden_tag() }}
+      
+      <div class="form-group">
+        {{ form.email.label(class="form-label subtle-fade-in") }}
+        {{ form.email(class="input-field focus-glow", placeholder="Enter your email address") }}
+        {% for error in form.email.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.name.label(class="form-label subtle-fade-in") }}
+        {{ form.name(class="input-field focus-glow", placeholder="Enter your name") }}
+        {% for error in form.name.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.password.label(class="form-label subtle-fade-in") }}
+        {{ form.password(class="input-field focus-glow", placeholder="Choose a password (8+ characters)") }}
+        {% for error in form.password.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="form-group">
+        {{ form.password2.label(class="form-label subtle-fade-in") }}
+        {{ form.password2(class="input-field focus-glow", placeholder="Confirm your password") }}
+        {% for error in form.password2.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      {{ form.submit(class="cta-button cta-primary pulse-button") }}
+    </form>
+    
+    <div class="auth-links">
+      <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+  </div>
+
+  <!-- Background elements -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+</body>
+</html>

@@ -1,5 +1,669 @@
-body{font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5}
-textarea{width:100%;font-family:inherit}
-button{padding:.5rem 1rem;margin-top:.5rem}
-ul{list-style:none;padding:0}
-li{margin:.25rem 0}
+/* --- Rotato Theme: Modern Aero Inspired --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --rotato-blue: #0078D7;
+  --rotato-blue-light: #50a5e8;
+  --rotato-blue-dark: #005a9e;
+  --rotato-accent: #ff6b6b;
+  --rotato-accent-light: #ff9e9e;
+  --rotato-success: #00c853;
+  --rotato-warning: #ffc107;
+  --rotato-error: #f44336;
+  
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-hover: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.2);
+  
+  --text-primary: #111;
+  --text-secondary: #333;
+  --text-muted: #666;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  
+  --transition-fast: 0.15s;
+  --transition-med: 0.25s;
+  --transition-slow: 0.4s;
+  --transition-easing: ease-in-out;
+  
+  --glow-subtle: 0 0 10px rgba(0, 120, 215, 0.3);
+  --glow-accent: 0 0 15px rgba(255, 107, 107, 0.4);
+  
+  /* Renamed all variables to be more consistent and product-specific */
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  max-width: 55rem; /* Consistent width */
+  margin: 3rem auto;
+  padding: 0; /* Remove body padding, apply to container */
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #e0f2f7 0%, #b3e0f2 100%);
+  background-attachment: fixed; /* Keep gradient fixed */
+  overflow-x: hidden;
+  /* Subtle fade-in on load */
+  opacity: 0;
+  animation: body-fade-in 0.6s ease-out forwards;
+}
+
+@keyframes body-fade-in {
+  to { opacity: 1; }
+}
+
+/* Flash Messages */
+.flash-messages {
+  margin-bottom: 1.5rem;
+}
+
+.flash-message {
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: var(--rotato-warning);
+  color: #333;
+  margin-bottom: 0.5rem;
+  animation: flash-appear 0.3s ease-out forwards;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid rgba(0, 0, 0, 0.2);
+}
+
+@keyframes flash-appear {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Error Message */
+.error-message {
+  color: var(--rotato-error);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Auth Links */
+.auth-links {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-input {
+  margin-right: 0.5rem;
+}
+
+.checkbox-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Premium Feature Indication */
+.premium-indicator {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--rotato-warning);
+  margin-left: 0.5rem;
+}
+
+.premium-indicator::before {
+  content: "✨";
+  margin-right: 0.25rem;
+}
+
+/* Info Box */
+.info-box {
+  background-color: rgba(0, 120, 215, 0.05);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(0, 120, 215, 0.1);
+}
+
+/* --- Glass Pane Container --- */
+.glass-pane {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px; /* Slightly softer radius */
+  padding: 2rem 2.5rem; /* Consistent padding */
+  margin: 3rem auto;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.15), var(--shadow-sm); /* Add inner shadow */
+  backdrop-filter: blur(12px); /* Slightly more blur */
+  -webkit-backdrop-filter: blur(12px);
+  transition: background-color var(--transition-med) var(--transition-easing),
+              box-shadow var(--transition-med) var(--transition-easing),
+              backdrop-filter var(--transition-med) var(--transition-easing),
+              -webkit-backdrop-filter var(--transition-med) var(--transition-easing);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-pane:hover {
+  background: var(--glass-bg-hover);
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.1), var(--shadow-md); /* Enhance hover shadow */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+
+/* --- Core Element Styling --- */
+h1, h2, h3 {
+  color: var(--aero-blue);
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); /* Add subtle text shadow */
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem; /* More space after H1 */
+  text-align: center;
+}
+
+.main-header h1 {
+    text-align: left;
+}
+
+h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid var(--aero-glass-border);
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+  color: var(--aero-text-secondary);
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--aero-blue);
+  text-decoration: none;
+  position: relative; /* For underline effect */
+  transition: color var(--transition-speed-fast) var(--transition-easing);
+}
+
+/* Animated underline */
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--aero-blue-light);
+  transition: width var(--transition-speed-med) var(--transition-easing);
+}
+
+a:hover {
+  color: var(--aero-blue-light);
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* --- Form Styling --- */
+form {
+  margin-bottom: 1.5rem;
+}
+
+/* Keep input form glass, remove for inline */
+.input-form {
+    /* Inherits .glass-pane styles if applied in HTML, otherwise use below */
+    /* background: var(--aero-glass-bg); */
+    /* border: 1px solid var(--aero-glass-border); */
+    /* border-radius: 8px; */
+    /* padding: 1.5rem 2rem; */
+    /* box-shadow: var(--aero-shadow); */
+    /* backdrop-filter: blur(8px); */
+    /* -webkit-backdrop-filter: blur(8px); */
+}
+
+.inline-form {
+   background: none;
+   border: none;
+   padding: 0;
+   margin: 0;
+   box-shadow: none;
+   backdrop-filter: none;
+   -webkit-backdrop-filter: none;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--aero-text-secondary);
+  font-size: 0.9rem;
+}
+
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--aero-glass-border);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.8); /* Slightly more opaque */
+  color: var(--aero-text-primary);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color var(--transition-speed-fast) var(--transition-easing),
+              background-color var(--transition-speed-fast) var(--transition-easing),
+              box-shadow var(--transition-speed-fast) var(--transition-easing); /* Add shadow transition */
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  border-color: var(--aero-blue);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), var(--aero-glow-subtle); /* Add focus glow */
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --- Button Styling --- */
+button,
+.cta-button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  margin-top: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(230,230,230,0.9) 100%);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Space between icon and text */
+  transition: all var(--transition-med) ease-in-out;
+  text-decoration: none; /* For link buttons */
+}
+
+/* Add transition for button icon span */
+button span,
+.cta-button span {
+    display: inline-block; /* Needed for transform */
+    transition: transform var(--transition-fast) ease;
+}
+
+button:hover,
+.cta-button:hover {
+  border-color: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%);
+  box-shadow: var(--shadow-md), var(--glow-subtle);
+  transform: translateY(-2px) scale(1.02);
+}
+
+button:active,
+.cta-button:active {
+  background: linear-gradient(to top, rgba(255,255,255,0.8) 0%, rgba(220,220,220,0.8) 100%);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+  transform: translateY(0px) scale(0.98);
+  transition-duration: var(--transition-fast);
+}
+
+/* Primary Button */
+.cta-button.cta-primary,
+button.cta-primary { 
+  background: linear-gradient(to bottom, var(--rotato-blue-light) 0%, var(--rotato-blue) 100%);
+  color: white;
+  border-color: rgba(0, 0, 0, 0.3);
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
+}
+
+.cta-button.cta-primary:hover,
+button.cta-primary:hover {
+  background: linear-gradient(to bottom, #64b5f6 0%, #1976d2 100%);
+  box-shadow: 0 4px 8px rgba(0, 120, 215, 0.25), var(--glow-subtle);
+}
+
+/* Primary button icon rotate */
+.cta-button.cta-primary:hover span,
+button.cta-primary:hover span {
+    transform: rotate(10deg);
+}
+
+.cta-button.cta-primary:active,
+button.cta-primary:active {
+  background: linear-gradient(to top, #64b5f6 0%, #1976d2 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Secondary Button */
+.cta-button.cta-secondary, 
+button.cta-secondary {
+   background: linear-gradient(to bottom, #ffeb3b, #fbc02d);
+   color: #444;
+   border-color: rgba(0,0,0,0.3);
+   text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.cta-button.cta-secondary:hover,
+button.cta-secondary:hover {
+   background: linear-gradient(to bottom, #fff176, #fdd835);
+   border-color: rgba(0,0,0,0.4);
+}
+
+.cta-button.cta-secondary:active,
+button.cta-secondary:active {
+    background: linear-gradient(to top, #fff176, #fdd835);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Premium Upgrade Button */
+.upgrade-button {
+   background: linear-gradient(to bottom, #ffeb3b, #fbc02d);
+   color: #444;
+   border-color: rgba(0,0,0,0.3);
+   text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+   padding: 0.5rem 1rem;
+   font-size: 0.9rem;
+   border-radius: 20px;
+}
+
+.upgrade-button:hover {
+   background: linear-gradient(to bottom, #fff176, #fdd835);
+   border-color: rgba(0,0,0,0.4);
+   transform: translateY(-2px) scale(1.05);
+}
+
+.upgrade-button:active {
+    background: linear-gradient(to top, #fff176, #fdd835);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    transform: translateY(0) scale(0.98);
+}
+
+/* Shimmer effect for upgrade button */
+.shimmer-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right, 
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* Inline Form Buttons */
+.inline-form button {
+    margin-top: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Disabled Button State */
+button:disabled,
+.cta-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* --- List Styling --- */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+li {
+  margin: 0.5rem 0;
+  padding: 0.6rem 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: background-color var(--transition-speed-fast) ease-in-out,
+              border-color var(--transition-speed-fast) ease-in-out,
+              transform var(--transition-speed-fast) ease-in-out, /* Add transform transition */
+              box-shadow var(--transition-speed-fast) ease-in-out; /* Add shadow transition */
+}
+
+li:hover {
+  background-color: rgba(220, 235, 250, 0.5);
+  border-color: rgba(0, 120, 215, 0.15);
+  transform: translateY(-1px) scale(1.01); /* Subtle lift and scale */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow */
+}
+
+/* Specific List Item Styles */
+.list-item-interactive {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  transition: all var(--transition-speed-med) ease; /* Smoother transition */
+}
+
+.list-item-interactive:hover {
+  background-color: rgba(230, 245, 255, 0.7); /* Slightly more opaque */
+  border-color: rgba(0, 120, 215, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 120, 215, 0.12); /* More shadow */
+  transform: translateY(-3px) scale(1.02); /* More lift */
+}
+
+.name-chip {
+  background-color: rgba(0, 120, 215, 0.1);
+  color: var(--aero-blue);
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all var(--transition-speed-fast) ease;
+}
+
+.list-item-interactive:hover .name-chip {
+  background-color: var(--aero-blue);
+  color: white;
+  transform: scale(1.03); /* Subtle grow */
+}
+
+.pair-separator {
+  color: var(--aero-text-secondary);
+  font-weight: bold;
+  opacity: 0.7;
+  transition: transform var(--transition-speed-med) cubic-bezier(0.175, 0.885, 0.32, 1.275), /* Bouncy transition */
+              color var(--transition-speed-med) ease;
+}
+
+.list-item-interactive:hover .pair-separator {
+    color: var(--aero-blue);
+    transform: scale(1.2) rotate(5deg); /* Add slight rotate back */
+}
+
+/* History List */
+.history-list {
+    margin-top: 0.5rem;
+    border-left: 2px solid rgba(0, 120, 215, 0.1);
+    padding-left: 1rem;
+}
+
+.list-item-subtle {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9rem;
+  color: var(--aero-text-secondary);
+  background: none;
+  border: none;
+  margin: 0.1rem 0;
+  border-radius: 3px;
+}
+
+.list-item-subtle:hover {
+  background-color: rgba(0, 120, 215, 0.05);
+  color: var(--aero-text-primary);
+}
+
+.name-chip-small {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #555;
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  display: inline-block;
+}
+
+.list-item-subtle:hover .name-chip-small {
+   background-color: rgba(0, 120, 215, 0.1);
+   color: var(--aero-blue);
+}
+
+
+/* --- Layout Helpers --- */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--aero-glass-border);
+}
+
+.main-header .upgrade-button {
+  margin-left: 1rem;
+  flex-shrink: 0;
+  margin-top: 0; /* Align with header */
+}
+
+.room-info {
+  background-color: rgba(0, 120, 215, 0.05);
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 120, 215, 0.1);
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.room-info p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--aero-text-secondary);
+  word-break: break-all;
+}
+.room-info p strong {
+  color: var(--aero-text-primary);
+  font-weight: 600;
+}
+
+.pairs-section, .history-section {
+  margin-top: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Background Orbs (Simplified & Optional) --- */
+/* Comment these out entirely if performance is still an issue */
+.background-orb {
+  position: fixed; /* Position relative to viewport */
+  border-radius: 50%;
+  filter: blur(80px); /* Heavy blur */
+  z-index: -1; /* Behind content */
+  opacity: 0; /* Start hidden */
+  pointer-events: none;
+  /* Simple fade and scale animation ONLY */
+  animation: orb-fade-pulse 15s infinite ease-in-out alternate;
+}
+
+.orb1 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(0, 120, 215, 0.3) 0%, transparent 70%);
+  top: 15%; left: 10%;
+  animation-delay: 0s;
+}
+
+.orb2 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(60, 180, 230, 0.2) 0%, transparent 70%);
+  bottom: 20%; right: 15%;
+  animation-delay: -5s; /* Offset start */
+}
+
+/* Remove orb3 or simplify further */
+/*
+.orb3 {
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+  top: 45%; left: 50%;
+  animation-delay: -10s;
+}
+*/
+
+@keyframes orb-fade-pulse {
+  0% { opacity: 0.3; transform: scale(0.95); }
+  100% { opacity: 0.5; transform: scale(1.05); }
+}
+
+
+/* --- Selection Styling --- */
+::selection {
+  background: var(--aero-blue-light);
+  color: white;
+  text-shadow: none;
+}

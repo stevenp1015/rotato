@@ -1,29 +1,69 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport -->
   <title>Rotato Pair Generator</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <!-- <script defer src="{{ url_for('static', filename='interactions.js') }}"></script> -->
 </head>
 <body>
-  <h1>Rotato Pair Generator</h1>
-  {% if pairs is undefined %}
-    <form method="post">
-      <textarea name="names" rows="10" placeholder="One name per line" required>{{ names|default('') }}</textarea><br>
-      <button type="submit">Create Room</button>
-    </form>
-  {% else %}
-    <p><strong>Room URL:</strong> {{ request.url }}</p>
-    <form method="post"><button type="submit">Generate Next Round</button></form>
-    <h2>Current Pairs</h2>
-    <ul>{% for a,b in pairs %}<li>{{ a }} — {{ b }}</li>{% endfor %}</ul>
-    {% if history %}
-    <h3>History</h3>
-    {% for rnd in history|reverse %}
-      <ul>{% for a,b in rnd %}<li>{{ a }} / {{ b }}</li>{% endfor %}</ul>
-    {% endfor %}
+  <div class="main-container glass-pane"> <!-- Added container -->
+    <header class="main-header"> <!-- Added header -->
+      <h1 class="fade-in-down">Rotato Pair Generator</h1> <!-- Added animation class -->
+      <a href="https://buy.stripe.com/test_5kA6oJ12C8O02GYcMM" class="upgrade-button shimmer-button">Upgrade ✨</a> <!-- Added shimmer effect -->
+    </header>
+
+    {% if pairs is undefined %}
+      <form method="post" class="input-form fade-in-up" style="animation-delay: 0.2s;"> <!-- Added classes/delay -->
+        <label for="names-textarea" class="form-label subtle-fade-in" style="animation-delay: 0.3s;">Enter Names:</label> <!-- Added label & class -->
+        <textarea id="names-textarea" name="names" rows="10" placeholder="One name per line..." required class="input-field focus-glow">{{ names|default('') }}</textarea><br> <!-- Added classes -->
+        <button type="submit" class="cta-button cta-primary pulse-button"> <!-- Reused CTA styles -->
+          <span>🌀</span> Create Room
+        </button>
+      </form>
+    {% else %}
+      <div class="room-info fade-in" style="animation-delay: 0.1s;"> <!-- Container for room info -->
+        <p><strong>Room URL:</strong> <a href="{{ request.url }}" class="link-animated">{{ request.url }}</a></p> <!-- Added class -->
+        <form method="post" class="inline-form"> <!-- Added class -->
+            <button type="submit" class="cta-button cta-secondary"> <!-- Reused CTA styles -->
+                <span>🔄</span> Generate Next Round
+            </button>
+        </form>
+      </div>
+
+      <div class="pairs-section fade-in-up" style="animation-delay: 0.3s;"> <!-- Container for pairs -->
+        <h2>Current Pairs</h2>
+        <ul class="pairs-list"> <!-- Added class -->
+          {% for a,b in pairs %}
+          <li class="list-item-interactive"> <!-- Added class -->
+            <span class="name-chip">{{ a }}</span> <span class="pair-separator">&harr;</span> <span class="name-chip">{{ b }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% if history %}
+      <div class="history-section fade-in-up" style="animation-delay: 0.5s;"> <!-- Container for history -->
+        <h3>History</h3>
+        {% for rnd in history|reverse %}
+          <ul class="history-list"> <!-- Added class -->
+          {% for a,b in rnd %}
+            <li class="list-item-subtle"> <!-- Added class -->
+              <span class="name-chip-small">{{ a }}</span> / <span class="name-chip-small">{{ b }}</span>
+            </li>
+          {% endfor %}
+          </ul>
+        {% endfor %}
+      </div>
+      {% endif %}
     {% endif %}
-  {% endif %}
+  </div>
+
+  <!-- Add background elements like landing page for consistency -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+
 </body>
 </html>
-

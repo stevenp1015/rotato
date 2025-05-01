@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upgrade to Premium - Rotato</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <style>
+    .pricing-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .pricing-plan {
+      flex: 1;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      max-width: 350px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pricing-plan:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .plan-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .plan-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--aero-text-primary);
+    }
+    
+    .plan-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 1rem 0;
+      color: var(--aero-blue);
+    }
+    
+    .plan-period {
+      font-size: 1rem;
+      color: #666;
+    }
+    
+    .plan-current {
+      display: inline-block;
+      background-color: rgba(0, 200, 83, 0.1);
+      color: #00c853;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    
+    .plan-features {
+      margin-bottom: 2rem;
+      flex-grow: 1;
+    }
+    
+    .plan-features li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      padding-left: 1.75rem;
+      background: none;
+      margin: 0;
+    }
+    
+    .plan-features li:last-child {
+      border-bottom: none;
+    }
+    
+    .plan-features li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--aero-blue);
+      font-weight: bold;
+    }
+    
+    .plan-features li.disabled {
+      color: #999;
+      text-decoration: line-through;
+    }
+    
+    .plan-features li.disabled::before {
+      content: "×";
+      color: #999;
+    }
+    
+    .free-plan {
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .premium-plan {
+      border-color: rgba(0, 120, 215, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .premium-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: -3rem;
+      background-color: #ffc107;
+      color: #333;
+      padding: 0.5rem 3rem;
+      transform: rotate(45deg);
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container glass-pane">
+    <header class="main-header">
+      <h1 class="fade-in-down">Upgrade to Premium</h1>
+      <a href="{{ url_for('dashboard') }}" class="cta-button">Back to Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="pricing-container">
+      <div class="pricing-plan free-plan">
+        <div class="plan-header">
+          <div class="plan-title">Free</div>
+          <div class="plan-price">$0</div>
+          <div class="plan-period">forever</div>
+          {% if user.subscription_tier == 'free' %}
+          <div class="plan-current">Your Current Plan</div>
+          {% endif %}
+        </div>
+        
+        <ul class="plan-features">
+          <li>Create unlimited rooms</li>
+          <li>Up to 10 participants per room</li>
+          <li>Manual pair generation</li>
+          <li class="disabled">Slack integration</li>
+          <li class="disabled">Automatic scheduling</li>
+          <li class="disabled">Priority support</li>
+        </ul>
+      </div>
+      
+      <div class="pricing-plan premium-plan">
+        <div class="premium-badge">Best Value</div>
+        <div class="plan-header">
+          <div class="plan-title">Premium</div>
+          <div class="plan-price">$9</div>
+          <div class="plan-period">per month</div>
+          {% if user.subscription_tier == 'premium' %}
+          <div class="plan-current">Your Current Plan</div>
+          {% endif %}
+        </div>
+        
+        <ul class="plan-features">
+          <li>Create unlimited rooms</li>
+          <li>Unlimited participants per room</li>
+          <li>Manual pair generation</li>
+          <li>Slack integration</li>
+          <li>Automatic scheduling</li>
+          <li>Priority support</li>
+        </ul>
+        
+        {% if user.subscription_tier != 'premium' %}
+        <form action="{{ url_for('create_checkout_session') }}" method="post">
+          <button type="submit" class="cta-button cta-primary" style="width: 100%;">
+            <span>⚡</span> Upgrade Now
+          </button>
+        </form>
+        {% else %}
+        <button class="cta-button" disabled style="width: 100%; opacity: 0.7;">
+          Current Plan
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="faq-item">
+        <h3>What happens when I upgrade?</h3>
+        <p>When you upgrade to Premium, you'll immediately gain access to all premium features including unlimited participants per room, Slack integration, and automatic scheduling.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>Can I cancel my subscription?</h3>
+        <p>Yes, you can cancel your premium subscription at any time. Your premium benefits will continue until the end of your current billing period.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h3>How is payment handled?</h3>
+        <p>All payments are securely processed through Stripe. We never store your credit card information on our servers.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background elements -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+</body>
+</html>

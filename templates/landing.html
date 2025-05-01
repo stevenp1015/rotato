@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Rotato – never repeat a pair</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport -->
+    <title>Rotato – Never Repeat a Pair</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='main.css') }}"
     />
+    <!-- Link to a potential JS file for more complex interactions later -->
+    <!-- <script defer src="{{ url_for('static', filename='interactions.js') }}"></script> -->
   </head>
   <body>
-    <h1>Fresh pairs, zero effort</h1>
-    <p>Paste a roster, click once, get unique matches every week.</p>
-    <a href="/demo">Try the playground</a> •
-    <a href="https://buy.stripe.com/test_5kA6oJ12C8O02GYcMM">Upgrade $9/mo</a>
+    <div class="landing-container glass-pane"> <!-- Added container with glass effect -->
+      <header class="landing-header">
+        <h1 class="glint-text"> <!-- Added class for text effect -->
+          <span>F</span><span>r</span><span>e</span><span>s</span><span>h</span> <span>p</span><span>a</span><span>i</span><span>r</span><span>s</span><span>,</span> <span>z</span><span>e</span><span>r</span><span>o</span> <span>e</span><span>f</span><span>f</span><span>o</span><span>r</span><span>t</span>
+        </h1>
+        <p class="subtitle fade-in-up"> <!-- Added class for animation -->
+          Paste a roster, click once, get unique matches every week.
+        </p>
+      </header>
+
+      <div class="cta-buttons"> <!-- Container for call-to-action buttons -->
+        <a href="{{ url_for('dashboard') }}" class="cta-button cta-primary pulse-button"> <!-- Changed link to dashboard, added classes -->
+          <span>🚀</span> Try Rotato Now
+        </a>
+        <a href="https://buy.stripe.com/test_5kA6oJ12C8O02GYcMM" class="cta-button cta-secondary shimmer-button"> <!-- Added classes -->
+          <span>💎</span> Upgrade $9/mo
+        </a>
+      </div>
+
+      <footer class="landing-footer subtle-fade-in"> <!-- Added footer & class -->
+          <p>© 2025 Rotato Inc. Pairing Perfected.</p>
+      </footer>
+    </div>
+
+    <!-- Subtle background elements for visual flair -->
+    <div class="background-orb orb1"></div>
+    <div class="background-orb orb2"></div>
+    <div class="background-orb orb3"></div>
+
   </body>
 </html>

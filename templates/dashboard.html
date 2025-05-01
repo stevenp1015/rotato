@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Rotato</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <style>
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .user-info {
+      background-color: rgba(0, 120, 215, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0, 120, 215, 0.1);
+    }
+    
+    .subscription-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+    
+    .subscription-free {
+      background-color: rgba(100, 100, 100, 0.1);
+      color: #666;
+    }
+    
+    .subscription-premium {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #d79b00;
+    }
+    
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .room-card {
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease-in-out;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 120, 215, 0.2);
+    }
+    
+    .room-stats {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .room-actions {
+      margin-top: auto;
+      padding-top: 1rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+    
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: rgba(0, 120, 215, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container glass-pane">
+    <div class="dashboard-header">
+      <h1 class="fade-in-down">Your Rotato Dashboard</h1>
+      <div class="header-actions">
+        {% if user.subscription_tier == 'free' %}
+        <a href="{{ url_for('subscription') }}" class="upgrade-button shimmer-button">Upgrade ✨</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="cta-button">Logout</a>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="user-info">
+      <h2>Welcome, {{ user.name }}!</h2>
+      <p>
+        Account: {{ user.email }}
+        <span class="subscription-badge {% if user.subscription_tier == 'premium' %}subscription-premium{% else %}subscription-free{% endif %}">
+          {{ user.subscription_tier|capitalize }}
+        </span>
+      </p>
+      {% if user.subscription_tier == 'free' %}
+      <p>Free accounts are limited to 10 participants per room. <a href="{{ url_for('subscription') }}">Upgrade to Premium</a> for unlimited participants, automatic scheduling, and Slack integration.</p>
+      {% endif %}
+    </div>
+    
+    <div class="dashboard-content">
+      <div class="section-header">
+        <h2>Your Rotation Rooms</h2>
+        <a href="{{ url_for('create_room') }}" class="cta-button cta-primary">Create New Room</a>
+      </div>
+      
+      {% if rooms %}
+      <div class="rooms-grid">
+        {% for room in rooms %}
+        <div class="room-card">
+          <h3>Room {{ loop.index }}</h3>
+          <div class="room-stats">
+            <p><strong>{{ room.participant_count }}</strong> participants</p>
+            <p><small>Created: {{ room.created_at.split('T')[0] }}</small></p>
+            <p><small>Last updated: {{ room.last_updated.split('T')[0] }}</small></p>
+          </div>
+          <div class="room-actions">
+            <a href="{{ url_for('room', room_id=room.id) }}" class="cta-button cta-secondary">Open Room</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-state-icon">🔄</div>
+        <h3>No Rooms Yet</h3>
+        <p>Create your first rotation room to get started!</p>
+        <a href="{{ url_for('create_room') }}" class="cta-button cta-primary">Create Room</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Background elements -->
+  <div class="background-orb orb1"></div>
+  <div class="background-orb orb2"></div>
+  <div class="background-orb orb3"></div>
+</body>
+</html>
