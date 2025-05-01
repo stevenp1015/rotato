@@ -3,6 +3,11 @@ from flask import Flask, render_template, request, redirect, url_for, g
 from dotenv import load_dotenv
 from pairing import round_robin, no_recent_repeats
 
+@app.route("/about")
+def about():
+    return render_template("landing.html")
+
+
 load_dotenv()
 DB = "rotato.db"
 
