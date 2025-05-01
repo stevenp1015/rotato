@@ -39,28 +39,48 @@ def index():
 @app.route("/<room_id>", methods=["GET", "POST"])
 def room(room_id):
     db = get_db()
-    row = db.execute("SELECT names, history FROM rooms WHERE id = ?",
-                     (room_id,)).fetchone()
+    row = db.execute(
+        "SELECT names, history FROM rooms WHERE id = ?", (room_id,)
+    ).fetchone()
     if not row:
         return "Room not found", 404
+
     names, history = map(json.loads, row)
 
-    if request.method == "POST":
+    # ── Auto-generate first round if none exist ──
+    if not history:
+        # try a round-robin that doesn’t repeat
         for _ in range(100):
             pairs = round_robin(names)
             if no_recent_repeats(history, pairs):
                 break
         history.append(pairs)
-        db.execute("UPDATE rooms SET history = ? WHERE id = ?",
-                   (json.dumps(history), room_id))
+        db.execute(
+            "UPDATE rooms SET history = ? WHERE id = ?",
+            (json.dumps(history), room_id)
+        )
+        db.commit()
+    # ── And still allow manual new rounds ──
+    elif request.method == "POST":
+        for _ in range(100):
+            pairs = round_robin(names)
+            if no_recent_repeats(history, pairs):
+                break
+        history.append(pairs)
+        db.execute(
+            "UPDATE rooms SET history = ? WHERE id = ?",
+            (json.dumps(history), room_id)
+        )
         db.commit()
 
-    current = history[-1] if history else []
-    return render_template("index.html",
-                           names="\n".join(names),
-                           pairs=current,
-                           history=history[:-1],
-                           room_id=room_id)
+    current = history[-1]
+    return render_template(
+        "index.html",
+        names="\n".join(names),
+        pairs=current,
+        history=history[:-1],
+        room_id=room_id
+    )
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
