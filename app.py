@@ -3,10 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, g
 from dotenv import load_dotenv
 from pairing import round_robin, no_recent_repeats
 
-@app.route("/about")
-def about():
-    return render_template("landing.html")
-
 
 load_dotenv()
 DB = "rotato.db"
@@ -28,6 +24,11 @@ def get_db():
 def close_db(exc):
     if (db := g.pop("db", None)):
         db.close()
+
+@app.route("/about")
+def about():
+    return render_template("landing.html")
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
